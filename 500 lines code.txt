@@ -1,0 +1,799 @@
+class Solution {
+  public int[] twoSum(int[] nums, int target) {
+    Map<Integer, Integer> numToIndex = new HashMap<>();
+    
+  for (int i = 0; i < nums.length; ++i) {
+      if (numToIndex.containsKey(target - nums[i]))
+        return new int[] {numToIndex.get(target - nums[i]), i};
+      numToIndex.put(nums[i], i);
+    }
+    throw new IllegalArgumentException();
+  }
+}
+
+// Java program for the above approach
+import java.util.Scanner;
+ 
+public class GFG {
+    public static void
+    guessingNumberGame()
+    {
+        // Scanner Class
+        Scanner sc = new Scanner(System.in);
+        // Generate the numbers
+        int number = 1 + (int)(100
+                               * Math.random())
+                               // Given K trials
+        int K = 5;
+ 
+        int i, guess;
+ 
+        System.out.println(
+            "A number is chosen"
+            + " between 1 to 100."
+            + "Guess the number"
+            + " within 5 trials.");
+ 
+        // Iterate over K Trials
+        for (i = 0; i < K; i++) {
+ 
+            System.out.println(
+                "Guess the number:");
+ 
+            // Take input for guessing
+            guess = sc.nextInt();
+ 
+            // If the number is guessed
+            if (number == guess) {
+                System.out.println(
+                    "Congratulations!"
+                    + " You guessed the number.");
+                break;
+            }
+            else if (number > guess
+                     && i != K - 1) {
+                System.out.println(
+                    "The number is "
+                    + "greater than " + guess);
+            }
+            else if (number < guess
+                     && i != K - 1) {
+                System.out.println(
+                    "The number is"
+                    + " less than " + guess);
+            }
+        }
+ 
+        if (i == K) {
+            System.out.println(
+                "You have exhausted"
+                + " K trials.");
+ 
+            System.out.println(
+                "The number was " + number);
+        }
+    }
+ 
+    // Driver Code
+    public static void
+    main(String arg[])
+    {
+ 
+        // Function Call
+        guessingNumberGame();
+    }
+}
+#include <iostream>
+using namespace std;
+
+class MyClass {         // The class
+  public:               // Access specifier
+    void myMethod();    // Method/function declaration
+};
+
+// Method/function definition outside the class
+void MyClass::myMethod() {
+  cout << "Hello World!";
+}
+
+int main() {
+  MyClass myObj;     // Create an object of MyClass
+  myObj.myMethod();  // Call the method
+  return 0;
+}
+
+import java.util.ArrayList; 
+import java.util.Collections; 
+import java.util.Scanner; 
+  
+// class name : memorygame 
+public class MemoryGame { 
+  
+    public static void main(String[] args) 
+    { 
+  
+        Scanner scanner = new Scanner(System.in); 
+        ArrayList<String> cards = new ArrayList<>(); 
+        cards.add("A"); 
+        cards.add("A"); 
+        cards.add("B"); 
+        cards.add("B"); 
+        cards.add("C"); 
+        cards.add("C"); 
+        cards.add("D"); 
+        cards.add("D"); 
+        Collections.shuffle(cards); 
+  
+        String[] board = new String[cards.size()]; 
+        boolean[] flipped = new boolean[cards.size()]; 
+        int pairsFound = 0; 
+  
+        while (pairsFound < 4) { 
+            printBoard(board); 
+            int firstIndex = getCardIndex( 
+                scanner, board, flipped, 
+                "Enter index of first card to flip:"); 
+            board[firstIndex] = cards.get(firstIndex); 
+            flipped[firstIndex] = true; 
+            printBoard(board); 
+            int secondIndex = getCardIndex( 
+                scanner, board, flipped, 
+                "Enter index of second card to flip:"); 
+            board[secondIndex] = cards.get(secondIndex); 
+            flipped[secondIndex] = true; 
+  
+            if (cards.get(firstIndex) 
+                    .equals(cards.get(secondIndex))) { 
+                System.out.println("You found a pair!"); 
+                pairsFound++; 
+            } 
+            else { 
+                System.out.println( 
+                    "Sorry, those cards don't match."); 
+                board[firstIndex] = " "; 
+                board[secondIndex] = " "; 
+                flipped[firstIndex] = false; 
+                flipped[secondIndex] = false; 
+            } 
+        } 
+        // win 
+        System.out.println("Congratulations, you won!"); 
+    } 
+  
+    public static int getCardIndex(Scanner scanner, 
+                                   String[] board, 
+                                   boolean[] flipped, 
+                                   String prompt) 
+    { 
+        int index; 
+        while (true) { 
+            System.out.println(prompt); 
+            index = scanner.nextInt(); 
+            if (index < 0 || index >= board.length) { 
+                System.out.println( 
+                    "Invalid index, try again."); 
+            } 
+            else if (flipped[index]) { 
+                System.out.println( 
+                    "Card already flipped, try again."); 
+            } 
+            else { 
+                break; 
+            } 
+        } 
+        return index; 
+    } 
+  
+    public static void printBoard(String[] board) 
+    { 
+        for (int i = 0; i < board.length; i++) { 
+            System.out.print("| " + board[i] + " "); 
+        } 
+        System.out.println("|"); 
+    } 
+}
+
+import java.io.*;
+import java.net.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public class Server { 
+    private static final int PORT = 1234; 
+    private static CopyOnWriteArrayList<ClientHandler> clients = new CopyOnWriteArrayList<>(); 
+
+    public static void main(String[] args) { 
+        try { 
+            ServerSocket serverSocket = new ServerSocket(PORT); 
+            System.out.println("Server is running and waiting for connections.."); 
+
+            // Accept incoming connections 
+            while (true) { 
+                Socket clientSocket = serverSocket.accept(); 
+                System.out.println("New client connected: " + clientSocket); 
+
+                // Create a new client handler for the connected client 
+                ClientHandler clientHandler = new ClientHandler(clientSocket); 
+                clients.add(clientHandler); 
+                new Thread(clientHandler).start(); 
+            } 
+        } catch (IOException e) { 
+            e.printStackTrace(); 
+        } 
+    } 
+
+    // Broadcast a message to all clients except the sender 
+    public static void broadcast(String message, ClientHandler sender) { 
+        for (ClientHandler client : clients) { 
+            if (client != sender) { 
+                client.sendMessage(message); 
+            } 
+        } 
+    } 
+
+    // Internal class to handle client connections 
+    private static class ClientHandler implements Runnable { 
+        private Socket clientSocket; 
+        private PrintWriter out; 
+        private BufferedReader in; 
+        private String Username; // Use Username consistently
+
+        // Constructor 
+        public ClientHandler(Socket socket) { 
+            this.clientSocket = socket; 
+
+            try { 
+                // Create input and output streams for communication 
+                out = new PrintWriter(clientSocket.getOutputStream(), true); 
+                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); 
+            } catch (IOException e) { 
+                e.printStackTrace(); 
+            } 
+        } 
+
+        // Run method to handle client communication 
+        @Override
+        public void run() { 
+            try { 
+                // Get the username from the client 
+                Username = getUsername(); // Use Username consistently
+                System.out.println("User " + Username + " connected."); // Use Username consistently
+
+                out.println("Welcome to the chat, " + Username + "!"); // Use Username consistently
+                out.println("Type Your Message"); 
+                String inputLine; 
+
+                // Continue receiving messages from the client 
+                while ((inputLine = in.readLine()) != null) { 
+                    System.out.println("[" + Username + "]: " + inputLine); // Use Username consistently
+
+                    // Broadcast the message to all clients 
+                    broadcast("[" + Username + "]: " + inputLine, this); // Use Username consistently
+                } 
+
+                // Remove the client handler from the list 
+                clients.remove(this); 
+
+                // Close the input and output streams and the client socket 
+                in.close(); 
+                out.close(); 
+                clientSocket.close(); 
+            } catch (IOException e) { 
+                e.printStackTrace(); 
+            } 
+        } 
+
+        // Get the username from the client 
+        private String getUsername() throws IOException { 
+            out.println("Enter your username:"); 
+            return in.readLine(); 
+        } 
+
+        public void sendMessage(String message) { 
+            out.println(message); 
+            out.println("Type Your Message"); 
+        } 
+    } 
+}
+
+import java.io.*;
+import java.net.*;
+import java.util.Scanner;
+
+public class Client {
+    private static final String SERVER_ADDRESS = "localhost";
+    private static final int SERVER_PORT = 12345;
+
+    public static void main(String[] args) {
+        try {
+            Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+            System.out.println("Connected to the chat server!");
+
+            // Setting up input and output streams
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            // Start a thread to handle incoming messages
+            new Thread(() -> {
+                try {
+                    String serverResponse;
+                    while ((serverResponse = in.readLine()) != null) {
+                        System.out.println(serverResponse);
+                    }
+    }
+}
+
+
+public enum InvitationStatus{
+  PENDING,
+  ACCEPTED,
+  REJECTED,
+  CANCELLED
+}
+ 
+public enum AccountStatus{
+  PUBLIC,
+  PRIVATE,
+  CLOSED
+}
+ 
+public enum MediaStatus {
+  PUBLIC,
+  PRIVATE
+}
+ 
+public enum MediaType {
+  PHOTO,
+  VIDEO
+}
+ 
+public class AddressDetails {
+  private String streetAddress;
+  private String city;
+  private String country;
+  ...
+}
+ 
+public class AccountDetails {
+  private Date createdTime;
+  private AccountStatus status;
+  private boolean updateAccountStatus(AccountStatus accountStatus);
+  ...
+}
+ 
+public class Invitation {
+  private Integer userID;
+  private InvitationStatus status;
+  private Date sentDate;
+ 
+  public boolean updateInvitation(InvitationStatus status);
+  ...
+}
+ 
+public class PendingInvitation extends Invitation{
+  public boolean acceptConnection();
+  public boolean rejectConnection();
+  ...
+}
+ 
+public class UserRelations {
+  private HashSet<Integer> userFollower;
+  private HashSet<Integer> userFollowing;
+  private HashSet<ConnectionInvitation> connectionInvitations;
+  ...
+}
+ 
+public class Comment {
+  private Integer id;
+  private User addedBy;
+  private Date addedDate;
+  private String comment;
+ 
+  public boolean updateComment(String comment);
+  ...
+}
+ 
+public class Media {
+  private Integer id;
+  private User createdBy;
+  private MediaType mediaType;
+  private String path;
+  private MediaStatus mediaStatus;
+  private int viewsCount;
+ 
+  private HashSet<Integer> userLikes;
+  private HashSet<Integer> userComments;
+  ...
+}
+ 
+public class User {
+  private int id;
+  private String password;
+  private String nickname;
+  private String email;
+  private AddressDetails addressDetails;
+  private AccountDetails accountDetails;
+  private UserRelations userRelations;
+  private HashSet<ConnectionInvitation> invitationsByMe;
+  private HashSet<ConnectionInvitation> invitationsToMe;
+ 
+  public boolean updatePassword();
+  public boolean createMedia(Media media);
+  public boolean updateMedia(int mediaId, MediaStatus mediaStatus);
+  public boolean sendInvitation(ConnectionInvitation invitation);
+  public List<User> searchUser(string term);
+  public List<Media> searchMedia(string term);
+  ...
+}
+
+// Java Program to create a text editor using java
+import java.awt.*;
+import javax.swing.*;
+import java.io.*;
+import java.awt.event.*;
+import javax.swing.plaf.metal.*;
+import javax.swing.text.*;
+class editor extends JFrame implements ActionListener {
+    // Text component
+    JTextArea t;
+ 
+    // Frame
+    JFrame f;
+ 
+    // Constructor
+    editor()
+    {
+        // Create a frame
+        f = new JFrame("editor");
+ 
+        try {
+            // Set metal look and feel
+            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+ 
+            // Set theme to ocean
+            MetalLookAndFeel.setCurrentTheme(new OceanTheme());
+        }
+        catch (Exception e) {
+        }
+ 
+        // Text component
+        t = new JTextArea();
+ 
+        // Create a menubar
+        JMenuBar mb = new JMenuBar();
+ 
+        // Create amenu for menu
+        JMenu m1 = new JMenu("File");
+ 
+        // Create menu items
+        JMenuItem mi1 = new JMenuItem("New");
+        JMenuItem mi2 = new JMenuItem("Open");
+        JMenuItem mi3 = new JMenuItem("Save");
+        JMenuItem mi9 = new JMenuItem("Print");
+ 
+        // Add action listener
+        mi1.addActionListener(this);
+        mi2.addActionListener(this);
+        mi3.addActionListener(this);
+        mi9.addActionListener(this);
+ 
+        m1.add(mi1);
+        m1.add(mi2);
+        m1.add(mi3);
+        m1.add(mi9);
+ 
+        // Create amenu for menu
+        JMenu m2 = new JMenu("Edit");
+ 
+        // Create menu items
+        JMenuItem mi4 = new JMenuItem("cut");
+        JMenuItem mi5 = new JMenuItem("copy");
+        JMenuItem mi6 = new JMenuItem("paste");
+ 
+        // Add action listener
+        mi4.addActionListener(this);
+        mi5.addActionListener(this);
+        mi6.addActionListener(this);
+ 
+        m2.add(mi4);
+        m2.add(mi5);
+        m2.add(mi6);
+ 
+        JMenuItem mc = new JMenuItem("close");
+ 
+        mc.addActionListener(this);
+ 
+        mb.add(m1);
+        mb.add(m2);
+        mb.add(mc);
+ 
+        f.setJMenuBar(mb);
+        f.add(t);
+        f.setSize(500, 500);
+        f.show();
+    }
+ 
+    // If a button is pressed
+    public void actionPerformed(ActionEvent e)
+    {
+        String s = e.getActionCommand();
+ 
+        if (s.equals("cut")) {
+            t.cut();
+        }
+        else if (s.equals("copy")) {
+            t.copy();
+        }
+        else if (s.equals("paste")) {
+            t.paste();
+        }
+        else if (s.equals("Save")) {
+            // Create an object of JFileChooser class
+            JFileChooser j = new JFileChooser("f:");
+ 
+            // Invoke the showsSaveDialog function to show the save dialog
+            int r = j.showSaveDialog(null);
+ 
+            if (r == JFileChooser.APPROVE_OPTION) {
+ 
+                // Set the label to the path of the selected directory
+                File fi = new File(j.getSelectedFile().getAbsolutePath());
+ 
+                try {
+                    // Create a file writer
+                    FileWriter wr = new FileWriter(fi, false);
+ 
+                    // Create buffered writer to write
+                    BufferedWriter w = new BufferedWriter(wr);
+ 
+                    // Write
+                    w.write(t.getText());
+ 
+                    w.flush();
+                    w.close();
+                }
+                catch (Exception evt) {
+                    JOptionPane.showMessageDialog(f, evt.getMessage());
+                }
+            }
+            // If the user cancelled the operation
+            else
+                JOptionPane.showMessageDialog(f, "the user cancelled the operation");
+        }
+        else if (s.equals("Print")) {
+            try {
+                // print the file
+                t.print();
+            }
+            catch (Exception evt) {
+                JOptionPane.showMessageDialog(f, evt.getMessage());
+            }
+        }
+        else if (s.equals("Open")) {
+            // Create an object of JFileChooser class
+            JFileChooser j = new JFileChooser("f:");
+ 
+            // Invoke the showsOpenDialog function to show the save dialog
+            int r = j.showOpenDialog(null);
+ 
+            // If the user selects a file
+            if (r == JFileChooser.APPROVE_OPTION) {
+                // Set the label to the path of the selected directory
+                File fi = new File(j.getSelectedFile().getAbsolutePath());
+ 
+                try {
+                    // String
+                    String s1 = "", sl = "";
+ 
+                    // File reader
+                    FileReader fr = new FileReader(fi);
+ 
+                    // Buffered reader
+                    BufferedReader br = new BufferedReader(fr);
+ 
+                    // Initialize sl
+                    sl = br.readLine();
+ 
+                    // Take the input from the file
+                    while ((s1 = br.readLine()) != null) {
+                        sl = sl + "\n" + s1;
+                    }
+ 
+                    // Set the text
+                    t.setText(sl);
+                }
+                catch (Exception evt) {
+                    JOptionPane.showMessageDialog(f, evt.getMessage());
+                }
+            }
+            // If the user cancelled the operation
+            else
+                JOptionPane.showMessageDialog(f, "the user cancelled the operation");
+        }
+        else if (s.equals("New")) {
+            t.setText("");
+        }
+        else if (s.equals("close")) {
+            f.setVisible(false);
+        }
+    }
+ 
+    // Main class
+    public static void main(String args[])
+    {
+        editor e = new editor();
+    }
+}
+
+import java.util.*;
+ 
+public class GFG {
+   
+    static String[] board;
+    static String turn;
+   
+   
+    // CheckWinner method will 
+    // decide the combination 
+    // of three box given below.
+    static String checkWinner()
+    {
+        for (int a = 0; a < 8; a++) {
+            String line = null;
+ 
+            switch (a) {
+            case 0:
+                line = board[0] + board[1] + board[2];
+                break;
+            case 1:
+                line = board[3] + board[4] + board[5];
+                break;
+            case 2:
+                line = board[6] + board[7] + board[8];
+                break;
+            case 3:
+                line = board[0] + board[3] + board[6];
+                break;
+            case 4:
+                line = board[1] + board[4] + board[7];
+                break;
+            case 5:
+                line = board[2] + board[5] + board[8];
+                break;
+            case 6:
+                line = board[0] + board[4] + board[8];
+                break;
+            case 7:
+                line = board[2] + board[4] + board[6];
+                break;
+            }
+            //For X winner
+            if (line.equals("XXX")) {
+                return "X";
+            }
+             
+            // For O winner
+            else if (line.equals("OOO")) {
+                return "O";
+            }
+        }
+         
+        for (int a = 0; a < 9; a++) {
+            if (Arrays.asList(board).contains(
+                    String.valueOf(a + 1))) {
+                break;
+            }
+            else if (a == 8) {
+                return "draw";
+            }
+        }
+ 
+       // To enter the X Or O at the exact place on board.
+        System.out.println(
+            turn + "'s turn; enter a slot number to place "
+            + turn + " in:");
+        return null;
+    }
+     
+    // To print out the board.
+    /* |---|---|---|
+       | 1 | 2 | 3 |
+       |-----------|
+       | 4 | 5 | 6 |
+       |-----------|
+       | 7 | 8 | 9 |
+       |---|---|---|*/
+   
+    static void printBoard()
+    {
+        System.out.println("|---|---|---|");
+        System.out.println("| " + board[0] + " | "
+                           + board[1] + " | " + board[2]
+                           + " |");
+        System.out.println("|-----------|");
+        System.out.println("| " + board[3] + " | "
+                           + board[4] + " | " + board[5]
+                           + " |");
+        System.out.println("|-----------|");
+        System.out.println("| " + board[6] + " | "
+                           + board[7] + " | " + board[8]
+                           + " |");
+        System.out.println("|---|---|---|");
+    }
+ 
+    public static void main(String[] args)
+    {
+        Scanner in = new Scanner(System.in);
+        board = new String[9];
+        turn = "X";
+        String winner = null;
+ 
+        for (int a = 0; a < 9; a++) {
+            board[a] = String.valueOf(a + 1);
+        }
+ 
+        System.out.println("Welcome to 3x3 Tic Tac Toe.");
+        printBoard();
+ 
+        System.out.println(
+            "X will play first. Enter a slot number to place X in:");
+ 
+        while (winner == null) {
+            int numInput;
+           
+           // Exception handling.
+           // numInput will take input from user like from 1 to 9.
+           // If it is not in range from 1 to 9.
+           // then it will show you an error "Invalid input."
+            try {
+                numInput = in.nextInt();
+                if (!(numInput > 0 && numInput <= 9)) {
+                    System.out.println(
+                        "Invalid input; re-enter slot number:");
+                    continue;
+                }
+            }
+            catch (InputMismatchException e) {
+                System.out.println(
+                    "Invalid input; re-enter slot number:");
+                continue;
+            }
+             
+            // This game has two player x and O.
+            // Here is the logic to decide the turn.
+            if (board[numInput - 1].equals(
+                    String.valueOf(numInput))) {
+                board[numInput - 1] = turn;
+ 
+                if (turn.equals("X")) {
+                    turn = "O";
+                }
+                else {
+                    turn = "X";
+                }
+ 
+                printBoard();
+                winner = checkWinner();
+            }
+            else {
+                System.out.println(
+                    "Slot already taken; re-enter slot number:");
+            }
+        }
+       
+        // If no one win or lose from both player x and O.
+        // then here is the logic to print "draw".
+        if (winner.equalsIgnoreCase("draw")) {
+            System.out.println(
+                "It's a draw! Thanks for playing.");
+        }
+       
+        // For winner -to display Congratulations! message.
+        else {
+            System.out.println(
+                "Congratulations! " + winner
+                + "'s have won! Thanks for playing.");
+        }
+      in.close();
+    }
+}
+
